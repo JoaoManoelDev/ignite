@@ -10,10 +10,20 @@
 
   chunk => Pedaço de dado. Nunca pode ser um formato primitivo, deve ser um
     buffer
+
+  buffer => Modelo que o node usa para transicionar dados entre streams
+
+  _read() => O método _read() é um método especial específico já implementado
+    para a classe Readable do módulo stream do Node e é usado para fornecer a
+    implementação de leitura de dados da fonte. Ao herdar da classe Readable e
+    substituir o método _read(), você está fornecendo sua própria implementação
+    personalizada para a leitura de dados da stream. O método _read() é chamado
+    automaticamente pela implementação interna da classe Readable sempre que
+    houver uma demanda por mais dados na stream.
 */
 
 // Construindo streams do zero
-import { Readable } from "node:stream"
+import { Readable, Writable, Transform } from "node:stream"
 
 class OneToHundredStream extends Readable {
   index = 1
@@ -33,5 +43,22 @@ class OneToHundredStream extends Readable {
   }
 }
 
+class InverseNumberStream extends Transform {
+  _transform(chunk, encoding, callback) {
+    const transformed = Number(chunk.toString()) * -1
 
-new OneToHundredStream().pipe(process.stdout)
+    callback(null, Buffer.from(String(transformed)))
+  }
+}
+
+class MultiplyByTenStream extends Writable {
+  // (pedaço, como está codificado, função chamada quando termina)
+  _write(chunk, encoding, callback) { 
+    console.log(Number(chunk.toString()) * 10)
+    callback()
+  }
+}
+
+new OneToHundredStream()
+.pipe(new InverseNumberStream())
+.pipe(new MultiplyByTenStream())
