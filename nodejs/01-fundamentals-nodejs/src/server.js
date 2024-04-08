@@ -9,7 +9,7 @@ import http from "node:http"
     externos como banco de dados, arquivos de texto etc. Ao fechar o sistema e
     abrir ela funcionará igual.
 
-  Headers (request/response) => Metadados. Informações adicionais que não te a
+  Headers (request/response) => Metadados. Informações adicionais que não tem a
   ver com o dado retornado do back-end para o front-ent, mas sim de como que
   aquele dado pode ser interpretado pelo front-end.
 */
@@ -33,10 +33,10 @@ const server = http.createServer((request, response) => {
       email: "johndoe@example.com"
     })
 
-    return response.end("Creating users")
+    return response.writeHead(201).end()
   }
 
-  return response.end("Hello World")
+  return response.writeHead(404).end()
 })
 
 server.listen(3333)
