@@ -1,8 +1,7 @@
 import http from "node:http"
-import { randomUUID } from "node:crypto"
 
 import { json } from "./middlewares/json.js"
-import { Database } from "./database.js"
+import { routes } from "./routes.js"
 
 /*
   Stateful => Sempre tem informação guardada em memória (Depende das informações
@@ -19,31 +18,21 @@ import { Database } from "./database.js"
 */
 
 // APP STATEFUL
-const database = new Database()
+
 
 const server = http.createServer(async (request, response) => {
   const { method, url } = request
 
   await json(request, response)
   
-  if (method === "GET" && url === "/users") {
-    const users = database.select("users")
+  const route = routes.find(route => {
+    return route.method === method && route.path === url
+  })
 
-    return response.end(JSON.stringify(users))
-  }
+  console.log(route)
 
-  if (method === "POST" && url === "/users") {
-    const { name, email } = request.body
-
-    const user = {
-      id: randomUUID(),
-      name,
-      email
-    }
-
-    database.insert("users", user)
-
-    return response.writeHead(201).end()
+  if (route) {
+    return route.handler(request, response)
   }
 
   return response.writeHead(404).end()
