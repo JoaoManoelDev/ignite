@@ -1,5 +1,7 @@
 import http from "node:http"
 
+import { json } from "./middlewares/json.js"
+
 /*
   Stateful => Sempre tem informação guardada em memória (Depende das informações
     que são salvas em memória para que ela funcione. Ao perder esses dados em
@@ -20,21 +22,10 @@ const users = []
 const server = http.createServer(async (request, response) => {
   const { method, url } = request
 
-  const buffers = []
-
-  for await (const chunk of request) {
-    buffers.push(chunk)
-  }
-
-  try {
-    request.body = JSON.parse(Buffer.concat(buffers).toString())
-  } catch (error) {
-    request.body = null
-  }
+  await json(request, response)
   
   if (method === "GET" && url === "/users") {
     return response
-      .setHeader("Content-type", "application/json")
       .end(JSON.stringify(users))
   }
 
