@@ -32,4 +32,12 @@ export const routes = [
       return response.writeHead(201).end()
     }
   },
+
+  {
+    method: "DELETE",
+    path: "/users/1",
+    handler: (request, response) => {
+      return response.end()
+    }
+  },
 ]

@@ -15,10 +15,19 @@ import { routes } from "./routes.js"
   Headers (request/response) => Metadados. Informações adicionais que não tem a
   ver com o dado retornado do back-end para o front-ent, mas sim de como que
   aquele dado pode ser interpretado pelo front-end.
+
+  Query Parameters =>
+    Parâmetros nomeados. Manter uma url Stateful. Usados para filtros, paginação
+    etc. Não obrigatórios. - http:localhost:3333/users?userId=1&name=joao
+
+  Route Parameters =>
+    Parâmetros não nomeados que ficam na rota. Usado para identificação de recurso
+    http:localhost:3333/users/1
+
+  Request Body => Envio de informações de um formulário (HTTPs)
 */
 
 // APP STATEFUL
-
 
 const server = http.createServer(async (request, response) => {
   const { method, url } = request
