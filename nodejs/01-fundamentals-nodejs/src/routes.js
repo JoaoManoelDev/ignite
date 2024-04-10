@@ -10,6 +10,7 @@ export const routes = [
     method: "GET",
     path: buildRoutePath("/users"),
     handler: (request, response) => {
+      console.log(request.query)
       const users = database.select("users")
 
       return response.end(JSON.stringify(users))
