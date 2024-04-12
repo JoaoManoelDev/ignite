@@ -5,6 +5,12 @@ import { z } from "zod"
 import { knex } from "../database"
 
 export const transactionsRoutes = async (app: FastifyInstance) => {
+  app.get("/" , async () => {
+    const transactions = await knex("transactions").select()
+
+    return { transactions }
+  })
+
   app.post("/", async (request, reply) => {
     const createTransactionBodySchema = z.object({
       title: z.string(),
